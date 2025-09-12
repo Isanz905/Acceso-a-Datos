@@ -33,5 +33,46 @@ public class Ejercicios {
          array con el listado del contenido del directorio indicado como argumento siempre y cuando este sea un directorio
          y no un archivo. Pruébalo pasándole al menos
          una ruta absoluta y una relativa.
-        ¿Qué devolvería en caso de que la ruta que nos proporcionan no se correspondiera con un directorio?*/
+        ¿Qué devolvería en caso de que la ruta que nos proporcionan no se corresponding con un directorio?*/
+
+    public void listarDirectorio2(String directorio){
+
+        //declaramos el objeto con la ruta que nos pasan por parametro
+        File ruta = new File(directorio);
+
+        // comprobamos si la ruta existe o si no es un directorio
+        if(!ruta.exists() || !ruta.isDirectory()){
+            System.out.println("Error en la ruta");
+        }
+        //declaracion del array donde se guarda la informacion obtenida y la imprimimos
+        String [] directorios = ruta.list();
+
+        for(String directorio2 : directorios){
+            System.out.println(directorio2);
+        }
+    }
+
+    // Crea un método existeFichero(String directorio, String fichero) que
+    //compruebe si existe dicho fichero en el directorio indicado.
+
+     public void existeFichero(String directorio, String fichero){
+
+        File rutaCompleta =  new File(directorio);
+        if(!rutaCompleta.exists()){
+            System.out.println("Directorio no encontrado");
+        }
+
+        File rutaConArchivo = new File(directorio + "/" + fichero);
+        if(rutaConArchivo.exists()){
+            System.out.println("Existe");
+        }else{
+            System.out.println("No existe");
+        }
+
+
+     }
+
+
+
+
 }
