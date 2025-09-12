@@ -65,8 +65,6 @@ public class Ejercicios {
         File rutaConArchivo = new File(directorio + "/" + fichero);
         if(rutaConArchivo.exists()){
             System.out.println("Existe");
-        }else{
-            System.out.println("No existe");
         }
 
 
