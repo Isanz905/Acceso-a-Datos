@@ -9,6 +9,16 @@ public class Ejercicio8 extends File {
     }
 
     public String showInfo() {
+        if(!isDirectory()){
+            return "Nombre: " + getName() + "\n" +
+                    "Ruta: " + getPath() + "\n" +
+                    "Ruta absoluta: " + getAbsolutePath() + "\n" +
+                    "¿Se puede leer? " + canRead() + "\n" +
+                    "¿Se puede escribir? " + canWrite() + "\n" +
+                    "Tamaño: " + length() + "\n" +
+                    "¿Es un directorio? " + isDirectory() + "\n" +
+                    "¿Es un fichero?" + isFile();
+        }
 
         return "Nombre: " + getName() + "\n" +
                 "Ruta: " + getPath() + "\n" +
