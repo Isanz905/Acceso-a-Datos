@@ -15,7 +15,7 @@ public class Ejercicios {
         ¿Este metodo debería ser dinámico o estático? ¿por qué?*/
 
     // en este caso estatico porque no depende de un objeto para funcionar
-    public void listarDirectorio(){
+    public static void listarDirectorio(){
 
         //Declaramos el objeto file
         File ruta = new File(".");
@@ -57,7 +57,7 @@ public class Ejercicios {
         }
     }
 
-    // Crea un metodo existeFichero(String directorio, String fichero) que
+    //3. Crea un metodo existeFichero(String directorio, String fichero) que
     //compruebe si existe dicho fichero en el directorio indicado.
 
      public void existeFichero(String directorio, String fichero){
@@ -103,7 +103,7 @@ public class Ejercicios {
                     File fichero = new File(ruta, "IgnacioSanz.txt");
                     fichero.createNewFile();
                     escrito = true;
-                }catch(IOException ioe){
+                }catch(IOException ioe){ // significa que ocurrió un problema durante una operación de entrada/salida (I/O) en un programa
                     ioe.printStackTrace();
                 }
 
@@ -119,30 +119,30 @@ public class Ejercicios {
     //Pruébalo con el archivo creado en el ejercicio anterior.
     //El archivo antiguo, ¿desaparece? se sobreEscribe
 
-    public void renombrarArchivo(String directorio){
+    public boolean renombrarArchivo(String directorio){
 
         // recogemos la ruta y declaramos el objeto
         File ruta = new File(directorio);
         if(!ruta.exists()){
-            System.err.println("Error en la ruta");
+            return false;
         }
         try{
             //declaramos el nuevo nombre del archivo
             File nuevoNombre = new File(ruta.getParent(),"IgnacioSanzDAM2.txt");
 
             if(nuevoNombre.exists()){
-                System.out.println("Nombre existe");
+                return true;
             }
             // si devuelve true, que se ha renombrado, se imprimirá el mensaje de exito
             boolean exito = ruta.renameTo(nuevoNombre);
-            if(exito){
-                System.out.println("Renombrado exitosamente");
-            }
+            return exito;
+
         }catch(SecurityException se){
-            se.printStackTrace();
+            return false;
         }catch (NullPointerException npe){
-            npe.printStackTrace();
+            return false;
         }
+
 
     }
 
@@ -154,7 +154,7 @@ public class Ejercicios {
     //sucede? ¿por qué?
 
     public void borrarArchivo(String directorio){
-
+        // usar el metodo setReadOnly();
         File ruta = new File(directorio);
 
         try{
