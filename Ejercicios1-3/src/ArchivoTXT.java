@@ -1,10 +1,8 @@
 import Excepciones.ArchivoNoValido;
+import Excepciones.DirectorioNoValido;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -164,6 +162,22 @@ public class ArchivoTXT {
 
 
         return null;
+    }
+    /**
+     *4. Incorpora un método mover que reciba otra ruta y mueva el archivo a ella. Si el
+     * directorio en el que se encontraba queda vacío, debe eliminarse también.
+     * */
+    public void mover(String ruta) throws IOException{
+        Path directorioDestino = Paths.get(ruta);
+        String archivo1 = new ArchivoTXT(getArchivo()).getArchivo();
+        Path origen  = Paths.get(archivo1);
+
+
+        if(!Files.exists(origen)){
+            throw new DirectorioNoValido("El directorio no existe");
+        }
+        Files.move(origen, directorioDestino);
+
     }
 
 }
