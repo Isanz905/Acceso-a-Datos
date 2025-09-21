@@ -4,46 +4,49 @@ import Excepciones.FalloEjecucion;
 import Excepciones.NombreVacioException;
 
 import java.io.*;
-import java.nio.file.*;
-import java.security.spec.RSAOtherPrimeInfo;
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ArchivoTXT {
-    public static final String LINE_BREAK = "\n";
+
     private String archivo;
 
     public ArchivoTXT(String archivo) {
         setArchivo(archivo);
 
     }
-    public ArchivoTXT() {}
+
+    public ArchivoTXT() {
+    }
 
 
-    public String getArchivo(){
+    public String getArchivo() {
         return archivo;
     }
 
-    public void setArchivo(String archivo){
+    public void setArchivo(String archivo) {
         try {
             Path path = Paths.get(archivo);
-            if(path.toFile().exists()){
+            if (path.toFile().exists()) {
                 this.archivo = archivo;
             }
-        }catch(ArchivoNoValido e){
+        } catch (ArchivoNoValido e) {
             throw new ArchivoNoValido("Error al abrir archivo " + archivo);
         }
     }
+
     /**
-     *  2. Añade un método aVerso que lea el contenido del archivo y
-     *      lo devuelva introduciendo un salto de línea después de cada punto
-     * */
-    public String aVerso(){
+     * 2. Añade un método aVerso que lea el contenido del archivo y
+     * lo devuelva introduciendo un salto de línea después de cada punto
+     *
+     */
+    public String aVerso() {
         StringBuilder sb = new StringBuilder();
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivo))) {
 
             String linea;
             while ((linea = reader.readLine()) != null) {
@@ -63,7 +66,8 @@ public class ArchivoTXT {
         return null;
     }
 
-    /**  3. Añade otro método codifica que reciba un String indicando la ruta de otro
+    /**
+     * 3. Añade otro método codifica que reciba un String indicando la ruta de otro
      * fichero (puede existir o no). Debe leer el contenido del archivo original, eliminar
      * todas las vocales y escribir el resultado en el archivo recibido como argumento.
      * Usa únicamente FileReader y FileWriter.
@@ -71,28 +75,27 @@ public class ArchivoTXT {
      * Un método codificaBuffer usando buffers.
      * Un método codificaFiles obteniendo las clases con buffer a partir de la
      * clase Files
-     * */
-    public String codifica(String archivo){
+     *
+     */
+    public String codifica(String archivo) {
         String directorio = new ArchivoTXT(getArchivo()).getArchivo(); // recogemos el archivo del constructor
 
-        if(archivo == null){
+        if (archivo == null) {
             throw new ArchivoNoValido("El archivo no puede ser nulo");
 
         }
-        if(archivo.equals(directorio)){
+        if (archivo.equals(directorio)) {
             throw new ArchivoNoValido("Estas intentando sobreescribir el archivo");
         }
 
 
         int caracter;
         String VOCALES = "AEIOUaeiou"; // declaramos las vocales
-        try(FileReader reader = new FileReader(directorio);
-            FileWriter writer = new FileWriter(archivo, true)
-        ) {
+        try (FileReader reader = new FileReader(directorio); FileWriter writer = new FileWriter(archivo, true)) {
 
-            while((caracter = reader.read()) != -1) {
+            while ((caracter = reader.read()) != -1) {
                 char c = (char) caracter;
-                if(VOCALES.indexOf(c) == -1){
+                if (VOCALES.indexOf(c) == -1) {
                     writer.write(c);
                 }
             }
@@ -104,29 +107,27 @@ public class ArchivoTXT {
         return null;
     }
 
-    public String codificaBuffer(String archivo){
+    public String codificaBuffer(String archivo) {
         String directorio = new ArchivoTXT(getArchivo()).getArchivo();
         String linea;
         String VOCALES = "AEIOUaeiou";
 
-        if(archivo == null){
+        if (archivo == null) {
             throw new ArchivoNoValido("El archivo no puede ser nulo");
 
         }
-        if(archivo.equals(directorio)){
+        if (archivo.equals(directorio)) {
             throw new ArchivoNoValido("Estas intentando sobreescribir el archivo");
         }
 
-        try(BufferedReader br = new BufferedReader(new FileReader(directorio));
-        BufferedWriter wr = new BufferedWriter(new FileWriter(archivo, true))
-        ){
+        try (BufferedReader br = new BufferedReader(new FileReader(directorio)); BufferedWriter wr = new BufferedWriter(new FileWriter(archivo, true))) {
 
             while ((linea = br.readLine()) != null) {
 
                 for (int i = 0; i < linea.length(); i++) {
 
-                    char c =  linea.charAt(i);
-                    if(VOCALES.indexOf(c) == -1){
+                    char c = linea.charAt(i);
+                    if (VOCALES.indexOf(c) == -1) {
                         wr.write(linea.charAt(i));
                     }
                 }
@@ -137,23 +138,23 @@ public class ArchivoTXT {
         } catch (IOException e) {
             throw new FalloEjecucion("Error al abrir archivo " + archivo);
         }
-        return  null;
+        return null;
     }
 
-    public String codificaFiles(String archivo){
+    public String codificaFiles(String archivo) {
 
         String archivo1 = new ArchivoTXT(getArchivo()).getArchivo();
         String VOCALES = "AEIOUaeiou";
 
-        try{
-          StringBuilder builder = new StringBuilder();
-          String lineas = String.valueOf(Files.readAllLines(Paths.get(archivo1)));
+        try {
+            StringBuilder builder = new StringBuilder();
+            String lineas = String.valueOf(Files.readAllLines(Paths.get(archivo1)));
 
             for (int i = 0; i < lineas.length(); i++) {
-                char c =  lineas.charAt(i);
-                if(VOCALES.indexOf(c) == -1){
+                char c = lineas.charAt(i);
+                if (VOCALES.indexOf(c) == -1) {
                     builder.append(c);
-                    Files.write(Paths.get(archivo),builder.toString().getBytes());
+                    Files.write(Paths.get(archivo), builder.toString().getBytes());
 
                 }
             }
@@ -168,18 +169,18 @@ public class ArchivoTXT {
     }
 
 
-
     /**
-     *4. Incorpora un método mover que reciba otra ruta y mueva el archivo a ella. Si el
+     * 4. Incorpora un método mover que reciba otra ruta y mueva el archivo a ella. Si el
      * directorio en el que se encontraba queda vacío, debe eliminarse también.
-     * */
-    public void mover(String ruta) throws IOException{
+     *
+     */
+    public void mover(String ruta) throws IOException {
         Path directorioDestino = Paths.get(ruta);
         String archivo1 = new ArchivoTXT(getArchivo()).getArchivo();
-        Path origen  = Paths.get(archivo1);
+        Path origen = Paths.get(archivo1);
 
 
-        if(!Files.exists(origen)){
+        if (!Files.exists(origen)) {
             throw new DirectorioNoValido("El directorio no existe");
         }
         Files.move(origen, directorioDestino);
@@ -221,17 +222,17 @@ public class ArchivoTXT {
         return contador;
     }
 
-    public int contarLetras(){
+    public int contarLetras() {
 
         String directorio = new ArchivoTXT(getArchivo()).getArchivo();
-        int total= 0;
+        int total = 0;
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(directorio))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(directorio))) {
 
             String linea;
-            while((linea = reader.readLine()) != null){
-                for(char c: linea.toCharArray()){
-                    if(Character.isLetter(c)){
+            while ((linea = reader.readLine()) != null) {
+                for (char c : linea.toCharArray()) {
+                    if (Character.isLetter(c)) {
                         total++;
                     }
                 }
@@ -245,17 +246,17 @@ public class ArchivoTXT {
         return total;
     }
 
-    public int contarPuntuacion(){
+    public int contarPuntuacion() {
         String directorio = new ArchivoTXT(getArchivo()).getArchivo();
 
-        int total= 0;
-        try(BufferedReader reader = new BufferedReader(new FileReader(directorio))) {
+        int total = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(directorio))) {
 
             String linea;
-            while((linea = reader.readLine()) != null){
+            while ((linea = reader.readLine()) != null) {
                 for (int i = 0; i < linea.length(); i++) {
                     char c = linea.charAt(i);
-                    if(!Character.isLetterOrDigit(c)){
+                    if (!Character.isLetterOrDigit(c)) {
                         total++;
                     }
                 }
@@ -274,12 +275,12 @@ public class ArchivoTXT {
      *6. Ahora debes incluir un método cuentaLineas que cuente cuántas frases tiene
      * (hasta cada punto), ayudándose con el método aVerso.
      */
-    public int cuentaLineas(){
+    public int cuentaLineas() {
         String texto = aVerso();
         int contador = 0;
 
         for (String lineas : texto.split("\n")) {
-            if(lineas.contains(".")){
+            if (lineas.contains(".")) {
                 contador++;
             }
         }
@@ -289,19 +290,20 @@ public class ArchivoTXT {
 
     /**
      * 7. Incorpora otro método cuentaPalabras que cuente todas las palabras del fichero.
-     * */
-    public int cuentaPalabra(){
+     *
+     */
+    public int cuentaPalabra() {
 
-        String directorio =  new ArchivoTXT(getArchivo()).getArchivo();
-        int  contador = 0;
+        String directorio = new ArchivoTXT(getArchivo()).getArchivo();
+        int contador = 0;
         String linea;
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(directorio))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(directorio))) {
 
-            while((linea = reader.readLine()) != null){
+            while ((linea = reader.readLine()) != null) {
                 for (int i = 0; i < linea.length(); i++) {
                     char c = linea.charAt(i);
-                    if(c == ' '){
+                    if (c == ' ') {
                         contador++;
                     }
                 }
@@ -321,23 +323,23 @@ public class ArchivoTXT {
      * 8. Implementa un método cuentaVocales que escriba el número de vocales de
      * cada palabra en un fichero numVocales.txt en el mismo directorio en el que
      * se encuentra el fichero original. Cada número debe ir seguido de un espacio.
-     * Se deben tener en cuenta tanto mayúsculas como minúsculas pero se contaránjuntas. Es decir una a y una A incrementarán el mismo contador.*/
-    public int cuentaVocales(String archivo){
+     * Se deben tener en cuenta tanto mayúsculas como minúsculas pero se contaránjuntas. Es decir una a y una A incrementarán el mismo contador.
+     */
+    public int cuentaVocales(String archivo) {
 
         Path archivoVocales = Paths.get(archivo);
-        String directorio =  new ArchivoTXT(getArchivo()).getArchivo();
+        String directorio = new ArchivoTXT(getArchivo()).getArchivo();
         String vocales = "aeiouAEIOU";
         String linea;
         int contador = 0;
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(directorio));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(archivoVocales.toFile(), true))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(directorio)); BufferedWriter writer = new BufferedWriter(new FileWriter(archivoVocales.toFile(), true))) {
 
-            while((linea = reader.readLine()) != null){
+            while ((linea = reader.readLine()) != null) {
                 for (int i = 0; i < linea.length(); i++) {
                     char C = linea.charAt(i);
-                    if(!(vocales.indexOf(C) == -1)){
-                        contador ++;
+                    if (!(vocales.indexOf(C) == -1)) {
+                        contador++;
                         writer.write(C);
                     }
                 }
@@ -356,21 +358,20 @@ public class ArchivoTXT {
      * 9. Modifica el ejercicio anterior para que tenga en cuenta las vocales con tilde y la
      * u con diéresis
      */
-    public int cuentaVocales2(String archivo){
+    public int cuentaVocales2(String archivo) {
         Path archivoVocales = Paths.get(archivo);
-        String directorio =  new ArchivoTXT(getArchivo()).getArchivo();
+        String directorio = new ArchivoTXT(getArchivo()).getArchivo();
         String vocales = "aeiouüAEIOUÜáéíóúÁÉÍÓÚ";
         String linea;
         int contador = 0;
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(directorio));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(archivoVocales.toFile(), true))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(directorio)); BufferedWriter writer = new BufferedWriter(new FileWriter(archivoVocales.toFile(), true))) {
 
-            while((linea = reader.readLine()) != null){
+            while ((linea = reader.readLine()) != null) {
                 for (int i = 0; i < linea.length(); i++) {
                     char C = linea.charAt(i);
-                    if(!(vocales.indexOf(C) == -1)){
-                        contador ++;
+                    if (!(vocales.indexOf(C) == -1)) {
+                        contador++;
                         writer.write(C);
                     }
                 }
@@ -387,22 +388,20 @@ public class ArchivoTXT {
 
 
     /**
-     * 10. Implementa el método frecuenciaLetras que muestre la frecuencia de las letras (a-z incluidas mayúsculas) del fichero.*/
-    public void frecuenciaLetras(){
+     * 10. Implementa el método frecuenciaLetras que muestre la frecuencia de las letras (a-z incluidas mayúsculas) del fichero.
+     */
+    public void frecuenciaLetras() {
 
-        String directorio =  new ArchivoTXT(getArchivo()).getArchivo();
+        String directorio = new ArchivoTXT(getArchivo()).getArchivo();
         Map<Character, Integer> frecuencia = new HashMap<>();
-        String linea;
+        int caracter = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(directorio))) {
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(directorio))){
-
-            while((linea = reader.readLine()) != null){
-                for(char c : linea.toCharArray()){
-                    if(Character.isLetter(c)){
-                        frecuencia.put(c, frecuencia.getOrDefault(c, 0) + 1);
-                    }
-
+            while ((caracter = reader.read()) != -1) {
+                if (Character.isLetter((char)caracter)) {
+                    frecuencia.put((char)caracter, frecuencia.getOrDefault((char)caracter, 0) + 1);
                 }
+
             }
 
         } catch (FileNotFoundException e) {
@@ -412,7 +411,7 @@ public class ArchivoTXT {
         }
 
         for (Map.Entry<Character, Integer> entry : frecuencia.entrySet()) {
-            System.out.println( "Letra " + entry.getKey() + " aparece: "  + entry.getValue());
+            System.out.println("Letra " + entry.getKey() + " aparece: " + entry.getValue());
         }
 
 

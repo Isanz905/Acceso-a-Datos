@@ -14,7 +14,8 @@ public class Personaje {
         this.usado = usado;
     }
 
-    public Personaje(){}
+    public Personaje() {
+    }
 
     public String getNombre() {
         return nombre;
