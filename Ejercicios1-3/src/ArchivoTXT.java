@@ -1,10 +1,15 @@
 import Excepciones.ArchivoNoValido;
 import Excepciones.DirectorioNoValido;
+import Excepciones.FalloEjecucion;
+import Excepciones.NombreVacioException;
 
 import java.io.*;
 import java.nio.file.*;
+import java.security.spec.RSAOtherPrimeInfo;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ArchivoTXT {
     public static final String LINE_BREAK = "\n";
@@ -44,7 +49,7 @@ public class ArchivoTXT {
             String linea;
             while ((linea = reader.readLine()) != null) {
 
-                String salto = linea.replace(".", "\n");
+                String salto = linea.replace(".", ".\n");
                 sb.append(salto);
 
                 return sb.toString();
@@ -96,7 +101,7 @@ public class ArchivoTXT {
         } catch (FileNotFoundException e) {
             throw new ArchivoNoValido("Archivo no encontrado");
         } catch (IOException e) {
-            return "Error al abrir archivo " + archivo;
+            throw new FalloEjecucion("Error al abrir archivo " + archivo);
         }
         return null;
     }
@@ -132,7 +137,7 @@ public class ArchivoTXT {
         } catch (FileNotFoundException e) {
             throw new ArchivoNoValido("Archivo no encontrado");
         } catch (IOException e) {
-            return "Error al abrir archivo " + archivo;
+            throw new FalloEjecucion("Error al abrir archivo " + archivo);
         }
         return  null;
     }
@@ -163,6 +168,9 @@ public class ArchivoTXT {
 
         return null;
     }
+
+
+
     /**
      *4. Incorpora un método mover que reciba otra ruta y mueva el archivo a ella. Si el
      * directorio en el que se encontraba queda vacío, debe eliminarse también.
@@ -179,5 +187,240 @@ public class ArchivoTXT {
         Files.move(origen, directorioDestino);
 
     }
+    /***
+     * 5. Añade tres métodos:
+     * Un método contar que cuente el número total de caracteres del archivo.
+     * Un método contarLetras que cuente el número total de letras del fichero.
+     * Un método contarPuntuación que cuente el número total de signos de puntuación del fichero.
+     */
+
+    public int contar() {
+
+        String directorio = new ArchivoTXT(getArchivo()).getArchivo();
+        int contador = 0;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(directorio))) {
+
+            String linea;
+
+            while ((linea = reader.readLine()) != null) {
+                for (char c : linea.toCharArray()) {
+                    contador++;
+                }
+
+            }
+
+
+        } catch (NullPointerException nl) {
+            throw new NombreVacioException("El directorio no puede ser nulo");
+        } catch (FileNotFoundException e) {
+            throw new ArchivoNoValido("Archivo no encontrado");
+        } catch (IOException e) {
+            throw new FalloEjecucion("Error al abrir archivo " + archivo);
+        }
+
+        return contador;
+    }
+
+    public int contarLetras(){
+
+        String directorio = new ArchivoTXT(getArchivo()).getArchivo();
+        int total= 0;
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(directorio))){
+
+            String linea;
+            while((linea = reader.readLine()) != null){
+                for(char c: linea.toCharArray()){
+                    if(Character.isLetter(c)){
+                        total++;
+                    }
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new ArchivoNoValido("Archivo no encontrado" + e);
+        } catch (IOException e) {
+            throw new FalloEjecucion("Error al abrir archivo " + archivo + e);
+        }
+        return total;
+    }
+
+    public int contarPuntuacion(){
+        String directorio = new ArchivoTXT(getArchivo()).getArchivo();
+
+        int total= 0;
+        try(BufferedReader reader = new BufferedReader(new FileReader(directorio))) {
+
+            String linea;
+            while((linea = reader.readLine()) != null){
+                for (int i = 0; i < linea.length(); i++) {
+                    char c = linea.charAt(i);
+                    if(!Character.isLetterOrDigit(c)){
+                        total++;
+                    }
+                }
+            }
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return total;
+    }
+
+    /***
+     *6. Ahora debes incluir un método cuentaLineas que cuente cuántas frases tiene
+     * (hasta cada punto), ayudándose con el método aVerso.
+     */
+
+    public int cuentaLineas(){
+        String texto = aVerso();
+        int contador = 0;
+
+        for (String lineas : texto.split("\n")) {
+            if(lineas.contains(".")){
+                contador++;
+            }
+        }
+
+        return contador;
+    }
+
+    /**
+     * 7. Incorpora otro método cuentaPalabras que cuente todas las palabras del fichero.
+     * */
+
+    public int cuentaPalabra(){
+
+        String directorio =  new ArchivoTXT(getArchivo()).getArchivo();
+        int  contador = 0;
+        String linea;
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(directorio))) {
+
+            while((linea = reader.readLine()) != null){
+                for (int i = 0; i < linea.length(); i++) {
+                    char c = linea.charAt(i);
+                    if(c == ' '){
+                        contador++;
+                    }
+                }
+            }
+
+
+        } catch (FileNotFoundException e) {
+            throw new ArchivoNoValido("Archivo no encontrado" + e);
+        } catch (IOException e) {
+            throw new FalloEjecucion("Error al abrir archivo " + archivo + e);
+        }
+
+        return contador;
+    }
+
+    /**
+     * 8. Implementa un método cuentaVocales que escriba el número de vocales de
+     * cada palabra en un fichero numVocales.txt en el mismo directorio en el que
+     * se encuentra el fichero original. Cada número debe ir seguido de un espacio.
+     * Se deben tener en cuenta tanto mayúsculas como minúsculas pero se contaránjuntas. Es decir una a y una A incrementarán el mismo contador.*/
+
+    public int cuentaVocales(String archivo){
+
+        Path archivoVocales = Paths.get(archivo);
+        String directorio =  new ArchivoTXT(getArchivo()).getArchivo();
+        String vocales = "aeiouAEIOU";
+        String linea;
+        int contador = 0;
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(directorio));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(archivoVocales.toFile(), true))){
+
+            while((linea = reader.readLine()) != null){
+                for (int i = 0; i < linea.length(); i++) {
+                    char C = linea.charAt(i);
+                    if(!(vocales.indexOf(C) == -1)){
+                        contador ++;
+                        writer.write(C);
+                    }
+                }
+            }
+
+
+        } catch (FileNotFoundException e) {
+            throw new ArchivoNoValido("Archivo no encontrado" + e);
+        } catch (IOException e) {
+            throw new FalloEjecucion("Error al abrir archivo " + archivo + e);
+        }
+        return contador;
+    }
+    /***
+     * 9. Modifica el ejercicio anterior para que tenga en cuenta las vocales con tilde y la
+     * u con diéresis
+     */
+
+    public int cuentaVocales2(String archivo){
+        Path archivoVocales = Paths.get(archivo);
+        String directorio =  new ArchivoTXT(getArchivo()).getArchivo();
+        String vocales = "aeiouüAEIOUÜáéíóúÁÉÍÓÚ";
+        String linea;
+        int contador = 0;
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(directorio));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(archivoVocales.toFile(), true))){
+
+            while((linea = reader.readLine()) != null){
+                for (int i = 0; i < linea.length(); i++) {
+                    char C = linea.charAt(i);
+                    if(!(vocales.indexOf(C) == -1)){
+                        contador ++;
+                        writer.write(C);
+                    }
+                }
+            }
+
+
+        } catch (FileNotFoundException e) {
+            throw new ArchivoNoValido("Archivo no encontrado" + e);
+        } catch (IOException e) {
+            throw new FalloEjecucion("Error al abrir archivo " + archivo + e);
+        }
+        return contador;
+    }
+
+
+    /**
+     * 10. Implementa el método frecuenciaLetras que muestre la frecuencia de las letras (a-z incluidas mayúsculas) del fichero.*/
+    public void frecuenciaLetras(){
+
+        String directorio =  new ArchivoTXT(getArchivo()).getArchivo();
+        Map<Character, Integer> frecuencia = new HashMap<>();
+        String linea;
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(directorio))){
+
+            while((linea = reader.readLine()) != null){
+                for(char c : linea.toCharArray()){
+                    if(Character.isLetter(c)){
+                        frecuencia.put(c, frecuencia.getOrDefault(c, 0) + 1);
+                    }
+
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new ArchivoNoValido("Archivo no encontrado" + e);
+        } catch (IOException e) {
+            throw new FalloEjecucion("Error al abrir archivo" + e);
+        }
+
+        for (Map.Entry<Character, Integer> entry : frecuencia.entrySet()) {
+            System.out.println( "Letra " + entry.getKey() + " aparece: "  + entry.getValue());
+        }
+
+
+    }
+
 
 }
