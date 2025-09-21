@@ -40,7 +40,6 @@ public class ArchivoTXT {
      *  2. Añade un método aVerso que lea el contenido del archivo y
      *      lo devuelva introduciendo un salto de línea después de cada punto
      * */
-
     public String aVerso(){
         StringBuilder sb = new StringBuilder();
 
@@ -73,7 +72,6 @@ public class ArchivoTXT {
      * Un método codificaFiles obteniendo las clases con buffer a partir de la
      * clase Files
      * */
-
     public String codifica(String archivo){
         String directorio = new ArchivoTXT(getArchivo()).getArchivo(); // recogemos el archivo del constructor
 
@@ -187,13 +185,14 @@ public class ArchivoTXT {
         Files.move(origen, directorioDestino);
 
     }
+
+
     /***
      * 5. Añade tres métodos:
      * Un método contar que cuente el número total de caracteres del archivo.
      * Un método contarLetras que cuente el número total de letras del fichero.
      * Un método contarPuntuación que cuente el número total de signos de puntuación del fichero.
      */
-
     public int contar() {
 
         String directorio = new ArchivoTXT(getArchivo()).getArchivo();
@@ -275,7 +274,6 @@ public class ArchivoTXT {
      *6. Ahora debes incluir un método cuentaLineas que cuente cuántas frases tiene
      * (hasta cada punto), ayudándose con el método aVerso.
      */
-
     public int cuentaLineas(){
         String texto = aVerso();
         int contador = 0;
@@ -292,7 +290,6 @@ public class ArchivoTXT {
     /**
      * 7. Incorpora otro método cuentaPalabras que cuente todas las palabras del fichero.
      * */
-
     public int cuentaPalabra(){
 
         String directorio =  new ArchivoTXT(getArchivo()).getArchivo();
@@ -325,7 +322,6 @@ public class ArchivoTXT {
      * cada palabra en un fichero numVocales.txt en el mismo directorio en el que
      * se encuentra el fichero original. Cada número debe ir seguido de un espacio.
      * Se deben tener en cuenta tanto mayúsculas como minúsculas pero se contaránjuntas. Es decir una a y una A incrementarán el mismo contador.*/
-
     public int cuentaVocales(String archivo){
 
         Path archivoVocales = Paths.get(archivo);
@@ -355,11 +351,11 @@ public class ArchivoTXT {
         }
         return contador;
     }
+
     /***
      * 9. Modifica el ejercicio anterior para que tenga en cuenta las vocales con tilde y la
      * u con diéresis
      */
-
     public int cuentaVocales2(String archivo){
         Path archivoVocales = Paths.get(archivo);
         String directorio =  new ArchivoTXT(getArchivo()).getArchivo();
