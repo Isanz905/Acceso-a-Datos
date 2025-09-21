@@ -77,21 +77,27 @@ public class ArchivoTXT {
      * clase Files
      *
      */
-    public String codifica(String archivo) {
+    public String codifica(String archivo)  {
         String directorio = new ArchivoTXT(getArchivo()).getArchivo(); // recogemos el archivo del constructor
-
+        Path path = Paths.get(archivo);
         if (archivo == null) {
             throw new ArchivoNoValido("El archivo no puede ser nulo");
 
         }
-        if (archivo.equals(directorio)) {
-            throw new ArchivoNoValido("Estas intentando sobreescribir el archivo");
+        if (!path.toFile().exists()) {
+            try {
+                path.toFile().createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+
         }
 
 
         int caracter;
         String VOCALES = "AEIOUaeiou"; // declaramos las vocales
-        try (FileReader reader = new FileReader(directorio); FileWriter writer = new FileWriter(archivo, true)) {
+        try (FileReader reader = new FileReader(directorio); FileWriter writer = new FileWriter(path.toFile(), true)) {
 
             while ((caracter = reader.read()) != -1) {
                 char c = (char) caracter;
@@ -102,25 +108,31 @@ public class ArchivoTXT {
         } catch (FileNotFoundException e) {
             throw new ArchivoNoValido("Archivo no encontrado");
         } catch (IOException e) {
-            throw new FalloEjecucion("Error al abrir archivo " + archivo);
+            throw new FalloEjecucion("Error al abrir archivo " + path);
         }
         return null;
     }
 
     public String codificaBuffer(String archivo) {
         String directorio = new ArchivoTXT(getArchivo()).getArchivo();
+        Path path = Paths.get(archivo);
         String linea;
         String VOCALES = "AEIOUaeiou";
 
-        if (archivo == null) {
-            throw new ArchivoNoValido("El archivo no puede ser nulo");
+        if (!path.toFile().exists()) {
+            try {
+                path.toFile().createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
 
         }
         if (archivo.equals(directorio)) {
             throw new ArchivoNoValido("Estas intentando sobreescribir el archivo");
         }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(directorio)); BufferedWriter wr = new BufferedWriter(new FileWriter(archivo, true))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(directorio)); BufferedWriter wr = new BufferedWriter(new FileWriter(path.toFile(), true))) {
 
             while ((linea = br.readLine()) != null) {
 
@@ -136,7 +148,7 @@ public class ArchivoTXT {
         } catch (FileNotFoundException e) {
             throw new ArchivoNoValido("Archivo no encontrado");
         } catch (IOException e) {
-            throw new FalloEjecucion("Error al abrir archivo " + archivo);
+            throw new FalloEjecucion("Error al abrir archivo " + path);
         }
         return null;
     }
@@ -145,7 +157,17 @@ public class ArchivoTXT {
 
         String archivo1 = new ArchivoTXT(getArchivo()).getArchivo();
         String VOCALES = "AEIOUaeiou";
+        Path path = Paths.get(archivo);
 
+        if (!path.toFile().exists()) {
+            try {
+                path.toFile().createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        }
         try {
             StringBuilder builder = new StringBuilder();
             String lineas = String.valueOf(Files.readAllLines(Paths.get(archivo1)));
@@ -154,7 +176,7 @@ public class ArchivoTXT {
                 char c = lineas.charAt(i);
                 if (VOCALES.indexOf(c) == -1) {
                     builder.append(c);
-                    Files.write(Paths.get(archivo), builder.toString().getBytes());
+                    Files.write((path.toFile()).toPath(), builder.toString().getBytes());
 
                 }
             }
